@@ -167,7 +167,7 @@ Ver [README_AUDIO.md](app/src/main/res/raw/README_AUDIO.md) para generar con Pyt
 
 ## 📄 Licencia
 
-MIT License - ver [LICENSE](LICENSE)
+Apache License 2.0 - ver [LICENSE](LICENSE)
 
 ## 👨‍💻 Autor
 
