@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores principales de la app -->
+    <color name="green_neon">#FF00FF00</color>
+    <color name="green_dark">#FF003300</color>
+    <color name="amber">#FFFFA500</color>
+    <color name="amber_dark">#FF332200</color>
+    <color name="red_bright">#FFFF0000</color>
+    <color name="red_dark">#FF330000</color>
+
+    <!-- Grises -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="gray_50">#FFFAFAFA</color>
+    <color name="gray_100">#FFF5F5F5</color>
+    <color name="gray_200">#FFEEEEEE</color>
+    <color name="gray_300">#FFE0E0E0</color>
+    <color name="gray_400">#FFBDBDBD</color>
+    <color name="gray_500">#FF9E9E9E</color>
+    <color name="gray_600">#FF757575</color>
+    <color name="gray_700">#FF616161</color>
+    <color name="gray_800">#FF424242</color>
+    <color name="gray_900">#FF212121</color>
+
+    <!-- Superficies -->
+    <color name="surface_container_low">#FF1A1A1A</color>
+    <color name="surface_container">#FF1E1E1E</color>
+    <color name="surface_container_high">#FF2C2C2C</color>
+</resources>

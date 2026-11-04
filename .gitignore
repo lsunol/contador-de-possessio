@@ -1,0 +1,60 @@
+# Gradle
+.gradle/
+build/
+
+# Kotlin
+.kotlin/
+*.salive
+
+# Android build outputs
+*.apk
+*.aab
+*.ap_
+*.apks
+*.dex
+*.class
+*.hprof
+output-metadata.json
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local machine configuration
+local.properties
+
+# Signing: only the shared debug keystore is versioned
+*.keystore
+*.jks
+!/debug.keystore
+keystore.properties
+
+# Secrets
+.env
+*.env
+
+# Binaries (the Gradle wrapper must stay versioned)
+*.jar
+*.so
+*.o
+!/gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+tmp/
+*.tmp
+
+# Test reports
+test-results/
+coverage/

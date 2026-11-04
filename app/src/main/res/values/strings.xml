@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name">Contador Posesión</string>
+    <string name="app_short_name">Posesión</string>
+
+    <!-- Main Screen -->
+    <string name="timer_running">En juego</string>
+    <string name="timer_paused">Pausado</string>
+    <string name="timer_expired">¡Tiempo excedido!</string>
+    <string name="timer_initial">Listo</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ajustes</string>
+    <string name="section_time">Tiempo</string>
+    <string name="section_audio">Audio</string>
+    <string name="section_haptics">Hápticos</string>
+    <string name="section_visual">Visual</string>
+    <string name="section_behavior">Comportamiento</string>
+
+    <string name="setting_base_duration">Duración base</string>
+    <string name="setting_warning_threshold">Advertencia en últimos</string>
+    <string name="setting_master_volume">Volumen maestro</string>
+    <string name="setting_play_tick">Click al reiniciar</string>
+    <string name="setting_play_warning">Beeps de advertencia</string>
+    <string name="setting_play_whistle">Silbato final</string>
+    <string name="setting_warning_sound">Sonido advertencia</string>
+    <string name="setting_whistle_sound">Sonido silbato</string>
+    <string name="setting_override_dnd">Ignorar modo silencio</string>
+
+    <string name="setting_vibrate_reset">Vibrar al reiniciar</string>
+    <string name="setting_vibrate_warning">Vibrar en advertencia</string>
+    <string name="setting_vibrate_expire">Vibrar fuerte al expirar</string>
+    <string name="setting_vibration_pattern">Patrón vibración</string>
+
+    <string name="setting_active_color">Color activo</string>
+    <string name="setting_warning_color">Color advertencia</string>
+    <string name="setting_expired_color">Color expirado</string>
+    <string name="setting_background_color">Color fondo</string>
+    <string name="setting_keep_screen_on">Mantener pantalla encendida</string>
+    <string name="setting_digit_size">Tamaño dígitos</string>
+    <string name="setting_force_reverse">Forzar orientación 180° (boca abajo)</string>
+
+    <string name="setting_reset_gesture">Gesto reiniciar</string>
+    <string name="setting_pause_gesture">Gesto pausar</string>
+    <string name="setting_auto_start">Auto-iniciar al abrir</string>
+
+    <string name="reset_defaults">Restaurar valores por defecto</string>
+
+    <!-- Gestos -->
+    <string name="gesture_single_tap">Tap simple</string>
+    <string name="gesture_double_tap">Doble tap</string>
+    <string name="gesture_volume_button">Botón volumen</string>
+    <string name="gesture_power_button">Botón encendido</string>
+    <string name="gesture_long_press">Pulsación larga</string>
+    <string name="gesture_three_tap">Triple tap</string>
+    <string name="gesture_volume_down">Volumen -</string>
+
+    <!-- Tamaños -->
+    <string name="size_small">Pequeño</string>
+    <string name="size_medium">Mediano</string>
+    <string name="size_large">Grande</string>
+    <string name="size_full_screen">Pantalla completa</string>
+
+    <!-- Patrones vibración -->
+    <string name="pattern_standard">Estándar</string>
+    <string name="pattern_double">Doble</string>
+    <string name="pattern_triple">Triple</string>
+    <string name="pattern_long">Largo</string>
+    <string name="pattern_heartbeat">Latido</string>
+
+    <!-- Sonidos -->
+    <string name="sound_beep_classic">Clásico</string>
+    <string name="sound_beep_soft">Suave</string>
+    <string name="sound_beep_digital">Digital</string>
+    <string name="sound_whistle_classic">Clásico</string>
+    <string name="sound_whistle_short">Corto</string>
+    <string name="sound_whistle_long">Largo</string>
+
+    <!-- Descripciones para accesibilidad -->
+    <string name="desc_seven_segment">Display 7 segmentos mostrando %1$d segundos</string>
+    <string name="desc_pause_overlay">Contador pausado, toque para reanudar</string>
+    <string name="desc_settings_button">Abrir ajustes</string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores para modo oscuro (valores por defecto, se sobreescriben por settings) -->
+    <color name="green_neon">#FF00FF00</color>
+    <color name="green_dark">#FF003300</color>
+    <color name="amber">#FFFFA500</color>
+    <color name="amber_dark">#FF332200</color>
+    <color name="red_bright">#FFFF0000</color>
+    <color name="red_dark">#FF330000</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
