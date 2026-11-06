@@ -74,13 +74,13 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        return when (keyCode) {
-            KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_VOLUME_DOWN -> {
-                // Delegar al ViewModel según configuración
-                true
-            }
-            else -> super.onKeyDown(keyCode, event)
-        }
+        if (viewModel.onExternalKey(keyCode, event?.repeatCount ?: 0)) return true
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        if (viewModel.isExternalKey(keyCode)) return true
+        return super.onKeyUp(keyCode, event)
     }
 }
 

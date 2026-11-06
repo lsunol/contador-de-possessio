@@ -221,6 +221,27 @@ class MainViewModel(
         }
     }
 
+    // ===== BOTÓN EXTERNO (pulsador Bluetooth/HID) =====
+    private var lastExternalPress = 0L
+
+    fun isExternalKey(keyCode: Int): Boolean =
+        currentSettings.externalButtonKeyCode != 0 && keyCode == currentSettings.externalButtonKeyCode
+
+    /** Ejecuta la acción asignada. Devuelve true si la tecla es la del botón externo (consumida). */
+    fun onExternalKey(keyCode: Int, repeatCount: Int): Boolean {
+        if (!isExternalKey(keyCode)) return false
+        val now = android.os.SystemClock.elapsedRealtime()
+        // Ignorar repeticiones y rebotes del pulsador
+        if (repeatCount == 0 && now - lastExternalPress >= 250) {
+            lastExternalPress = now
+            when (currentSettings.externalButtonAction) {
+                com.lluis.possessioncounter.core.domain.model.ExternalButtonAction.RESET -> resetTimer()
+                com.lluis.possessioncounter.core.domain.model.ExternalButtonAction.PAUSE -> pauseTimer()
+            }
+        }
+        return true
+    }
+
     // ===== GESTURE HANDLING =====
     fun onSingleTap() {
         when (currentSettings.resetGesture) {

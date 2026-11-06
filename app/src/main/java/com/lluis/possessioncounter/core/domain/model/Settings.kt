@@ -67,6 +67,14 @@ enum class PauseGesture(val displayName: String) {
 }
 
 /**
+ * Acción del botón externo (pulsador Bluetooth/HID)
+ */
+enum class ExternalButtonAction(val displayName: String) {
+    RESET("Reiniciar"),
+    PAUSE("Pausar")
+}
+
+/**
  * Configuración completa de la aplicación
  */
 @Parcelize
@@ -125,7 +133,13 @@ data class Settings(
     /** Gesto para pausar */
     val pauseGesture: PauseGesture = PauseGesture.DOUBLE_TAP,
     /** Auto-iniciar al abrir app */
-    val autoStart: Boolean = true
+    val autoStart: Boolean = true,
+
+    // ===== BOTÓN EXTERNO =====
+    /** Código de tecla (KeyEvent) del pulsador externo; 0 = sin asignar */
+    val externalButtonKeyCode: Int = 0,
+    /** Acción que dispara el pulsador externo */
+    val externalButtonAction: ExternalButtonAction = ExternalButtonAction.RESET
 ) : Parcelable {
 
     /** Duración base en milisegundos */
