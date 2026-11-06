@@ -19,7 +19,7 @@
     <string name="setting_base_duration">Durada base</string>
     <string name="setting_warning_threshold">Avís als últims</string>
     <string name="setting_master_volume">Volum general</string>
-    <string name="setting_play_tick">Clic en reiniciar</string>
+    <string name="setting_play_tick">Beep en reiniciar</string>
     <string name="setting_play_warning">Pitets d\'avís</string>
     <string name="setting_play_whistle">Xiulet final</string>
     <string name="setting_warning_sound">So d\'avís</string>
@@ -37,7 +37,7 @@
     <string name="setting_background_color">Color de fons</string>
     <string name="setting_keep_screen_on">Mantenir la pantalla encesa</string>
     <string name="setting_digit_size">Mida dels dígits</string>
-    <string name="setting_force_reverse">Forçar orientació 180° (cap per avall)</string>
+    <string name="setting_force_reverse">Girar el comptador 180° (boca avall)</string>
 
     <string name="setting_reset_gesture">Gest per reiniciar</string>
     <string name="setting_pause_gesture">Gest per pausar</string>

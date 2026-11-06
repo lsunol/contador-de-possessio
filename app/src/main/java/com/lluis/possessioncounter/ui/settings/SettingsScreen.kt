@@ -83,8 +83,10 @@ fun SettingsScreen(
     val scrollState = rememberScrollState()
     val context = LocalContext.current
 
+    MaterialTheme(colorScheme = SettingsColorScheme) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
             TopAppBar(
                 title = { Text("Ajustos", fontWeight = FontWeight.Bold) },
@@ -150,7 +152,7 @@ fun SettingsScreen(
                 }
 
                 SettingToggle(
-                    label = "Clic en reiniciar",
+                    label = "Beep en reiniciar",
                     checked = settings.playTickOnReset,
                     onCheckedChange = { viewModel.updateBooleanSetting(
                         { it.playTickOnReset },
@@ -159,7 +161,7 @@ fun SettingsScreen(
                 )
 
                 SettingToggle(
-                    label = "Pitets d'avís",
+                    label = "Sons d'avís",
                     checked = settings.playWarningBeeps,
                     onCheckedChange = { viewModel.updateBooleanSetting(
                         { it.playWarningBeeps },
@@ -247,6 +249,12 @@ fun SettingsScreen(
                     checked = settings.keepScreenOn,
                     onCheckedChange = { viewModel.updateKeepScreenOn(it) }
                 )
+
+                SettingToggle(
+                    label = "Girar el comptador 180° (boca avall)",
+                    checked = settings.forceReversePortrait,
+                    onCheckedChange = { viewModel.updateForceReversePortrait(it) }
+                )
             }
 
             // ===== SECCIÓN: COMPORTAMIENTO =====
@@ -273,7 +281,22 @@ fun SettingsScreen(
             }
         }
     }
+    }
 }
+
+private val SettingsColorScheme = androidx.compose.material3.darkColorScheme(
+    primary = Color(0xFF6EE08A),
+    onPrimary = Color(0xFF003914),
+    surface = Color(0xFF121212),
+    onSurface = Color(0xFFECECEC),
+    onSurfaceVariant = Color(0xFFB8B8B8),
+    surfaceContainer = Color(0xFF1C1C1C),
+    surfaceContainerLow = Color(0xFF1E1E1E),
+    surfaceContainerHigh = Color(0xFF2A2A2A),
+    outlineVariant = Color(0xFF4A4A4A),
+    errorContainer = Color(0xFF5C2323),
+    onErrorContainer = Color(0xFFFFDAD6)
+)
 
 // ===== COMPONENTES DE SETTINGS =====
 
@@ -336,8 +359,8 @@ fun SettingToggle(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp)
-            .background(MaterialTheme.colorScheme.surface, RectangleShape)
+            .padding(vertical = 4.dp)
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh, RoundedCornerShape(12.dp))
             .clickable { onCheckedChange(!checked) }
     ) {
         Text(text = label, fontSize = 16.sp, modifier = Modifier.weight(1f).padding(16.dp))
@@ -360,8 +383,8 @@ fun SettingColorPicker(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp)
-            .background(MaterialTheme.colorScheme.surface, RectangleShape)
+            .padding(vertical = 4.dp)
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh, RoundedCornerShape(12.dp))
             .clickable { /* TODO: Color picker dialog */ }
     ) {
         Text(text = label, fontSize = 16.sp, modifier = Modifier.weight(1f).padding(16.dp))
