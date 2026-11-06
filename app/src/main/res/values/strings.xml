@@ -1,82 +1,82 @@
 <resources>
-    <string name="app_name">Contador Posesión</string>
-    <string name="app_short_name">Posesión</string>
+    <string name="app_name">8 Segons</string>
+    <string name="app_short_name">8 Segons</string>
 
     <!-- Main Screen -->
-    <string name="timer_running">En juego</string>
-    <string name="timer_paused">Pausado</string>
-    <string name="timer_expired">¡Tiempo excedido!</string>
-    <string name="timer_initial">Listo</string>
+    <string name="timer_running">En joc</string>
+    <string name="timer_paused">En pausa</string>
+    <string name="timer_expired">Temps excedit!</string>
+    <string name="timer_initial">A punt</string>
 
     <!-- Settings -->
-    <string name="settings_title">Ajustes</string>
-    <string name="section_time">Tiempo</string>
+    <string name="settings_title">Ajustos</string>
+    <string name="section_time">Temps</string>
     <string name="section_audio">Audio</string>
-    <string name="section_haptics">Hápticos</string>
+    <string name="section_haptics">Hàptics</string>
     <string name="section_visual">Visual</string>
-    <string name="section_behavior">Comportamiento</string>
+    <string name="section_behavior">Comportament</string>
 
-    <string name="setting_base_duration">Duración base</string>
-    <string name="setting_warning_threshold">Advertencia en últimos</string>
-    <string name="setting_master_volume">Volumen maestro</string>
-    <string name="setting_play_tick">Click al reiniciar</string>
-    <string name="setting_play_warning">Beeps de advertencia</string>
-    <string name="setting_play_whistle">Silbato final</string>
-    <string name="setting_warning_sound">Sonido advertencia</string>
-    <string name="setting_whistle_sound">Sonido silbato</string>
-    <string name="setting_override_dnd">Ignorar modo silencio</string>
+    <string name="setting_base_duration">Durada base</string>
+    <string name="setting_warning_threshold">Avís als últims</string>
+    <string name="setting_master_volume">Volum general</string>
+    <string name="setting_play_tick">Clic en reiniciar</string>
+    <string name="setting_play_warning">Pitets d\'avís</string>
+    <string name="setting_play_whistle">Xiulet final</string>
+    <string name="setting_warning_sound">So d\'avís</string>
+    <string name="setting_whistle_sound">So de xiulet</string>
+    <string name="setting_override_dnd">Ignorar mode silenci</string>
 
-    <string name="setting_vibrate_reset">Vibrar al reiniciar</string>
-    <string name="setting_vibrate_warning">Vibrar en advertencia</string>
-    <string name="setting_vibrate_expire">Vibrar fuerte al expirar</string>
-    <string name="setting_vibration_pattern">Patrón vibración</string>
+    <string name="setting_vibrate_reset">Vibrar en reiniciar</string>
+    <string name="setting_vibrate_warning">Vibrar en l\'avís</string>
+    <string name="setting_vibrate_expire">Vibrar fort en acabar</string>
+    <string name="setting_vibration_pattern">Patró de vibració</string>
 
-    <string name="setting_active_color">Color activo</string>
-    <string name="setting_warning_color">Color advertencia</string>
-    <string name="setting_expired_color">Color expirado</string>
-    <string name="setting_background_color">Color fondo</string>
-    <string name="setting_keep_screen_on">Mantener pantalla encendida</string>
-    <string name="setting_digit_size">Tamaño dígitos</string>
-    <string name="setting_force_reverse">Forzar orientación 180° (boca abajo)</string>
+    <string name="setting_active_color">Color actiu</string>
+    <string name="setting_warning_color">Color d\'avís</string>
+    <string name="setting_expired_color">Color d\'acabat</string>
+    <string name="setting_background_color">Color de fons</string>
+    <string name="setting_keep_screen_on">Mantenir la pantalla encesa</string>
+    <string name="setting_digit_size">Mida dels dígits</string>
+    <string name="setting_force_reverse">Forçar orientació 180° (cap per avall)</string>
 
-    <string name="setting_reset_gesture">Gesto reiniciar</string>
-    <string name="setting_pause_gesture">Gesto pausar</string>
-    <string name="setting_auto_start">Auto-iniciar al abrir</string>
+    <string name="setting_reset_gesture">Gest per reiniciar</string>
+    <string name="setting_pause_gesture">Gest per pausar</string>
+    <string name="setting_auto_start">Iniciar automàticament en obrir</string>
 
-    <string name="reset_defaults">Restaurar valores por defecto</string>
+    <string name="reset_defaults">Restaurar valors per defecte</string>
 
     <!-- Gestos -->
-    <string name="gesture_single_tap">Tap simple</string>
-    <string name="gesture_double_tap">Doble tap</string>
-    <string name="gesture_volume_button">Botón volumen</string>
-    <string name="gesture_power_button">Botón encendido</string>
-    <string name="gesture_long_press">Pulsación larga</string>
-    <string name="gesture_three_tap">Triple tap</string>
-    <string name="gesture_volume_down">Volumen -</string>
+    <string name="gesture_single_tap">Toc simple</string>
+    <string name="gesture_double_tap">Doble toc</string>
+    <string name="gesture_volume_button">Botó de volum</string>
+    <string name="gesture_power_button">Botó d\'encesa</string>
+    <string name="gesture_long_press">Pulsació llarga</string>
+    <string name="gesture_three_tap">Triple toc</string>
+    <string name="gesture_volume_down">Volum -</string>
 
     <!-- Tamaños -->
-    <string name="size_small">Pequeño</string>
-    <string name="size_medium">Mediano</string>
-    <string name="size_large">Grande</string>
+    <string name="size_small">Petit</string>
+    <string name="size_medium">Mitjà</string>
+    <string name="size_large">Gran</string>
     <string name="size_full_screen">Pantalla completa</string>
 
     <!-- Patrones vibración -->
-    <string name="pattern_standard">Estándar</string>
+    <string name="pattern_standard">Estàndard</string>
     <string name="pattern_double">Doble</string>
     <string name="pattern_triple">Triple</string>
-    <string name="pattern_long">Largo</string>
-    <string name="pattern_heartbeat">Latido</string>
+    <string name="pattern_long">Llarg</string>
+    <string name="pattern_heartbeat">Batec</string>
 
     <!-- Sonidos -->
-    <string name="sound_beep_classic">Clásico</string>
-    <string name="sound_beep_soft">Suave</string>
+    <string name="sound_beep_classic">Clàssic</string>
+    <string name="sound_beep_soft">Suau</string>
     <string name="sound_beep_digital">Digital</string>
-    <string name="sound_whistle_classic">Clásico</string>
-    <string name="sound_whistle_short">Corto</string>
-    <string name="sound_whistle_long">Largo</string>
+    <string name="sound_whistle_classic">Clàssic</string>
+    <string name="sound_whistle_short">Curt</string>
+    <string name="sound_whistle_long">Llarg</string>
 
     <!-- Descripciones para accesibilidad -->
-    <string name="desc_seven_segment">Display 7 segmentos mostrando %1$d segundos</string>
-    <string name="desc_pause_overlay">Contador pausado, toque para reanudar</string>
-    <string name="desc_settings_button">Abrir ajustes</string>
+    <string name="desc_seven_segment">Pantalla de 7 segments mostrant %1$d segons</string>
+    <string name="desc_pause_overlay">Comptador en pausa, toca per reprendre</string>
+    <string name="desc_settings_button">Obrir ajustos</string>
 </resources>

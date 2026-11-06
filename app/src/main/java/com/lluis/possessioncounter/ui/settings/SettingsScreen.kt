@@ -87,12 +87,12 @@ fun SettingsScreen(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text("Ajustes", fontWeight = FontWeight.Bold) },
+                title = { Text("Ajustos", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { (context as ComponentActivity).onBackPressedDispatcher.onBackPressed() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volver"
+                            contentDescription = "Enrere"
                         )
                     }
                 },
@@ -110,9 +110,9 @@ fun SettingsScreen(
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             // ===== SECCIÓN: TIEMPO =====
-            SettingsSection(title = "⏱️ Tiempo") {
+            SettingsSection(title = "⏱️ Temps") {
                 SettingRow(
-                    label = "Duración base",
+                    label = "Durada base",
                     value = "${settings.baseDurationSeconds}s"
                 ) {
                     Slider(
@@ -124,7 +124,7 @@ fun SettingsScreen(
                 }
 
                 SettingRow(
-                    label = "Advertencia en últimos",
+                    label = "Avís als últims",
                     value = "${settings.warningThresholdSeconds}s"
                 ) {
                     Slider(
@@ -139,7 +139,7 @@ fun SettingsScreen(
             // ===== SECCIÓN: AUDIO =====
             SettingsSection(title = "🔊 Audio") {
                 SettingRow(
-                    label = "Volumen maestro",
+                    label = "Volum general",
                     value = "${(settings.masterVolume * 100).roundToInt()}%"
                 ) {
                     Slider(
@@ -150,7 +150,7 @@ fun SettingsScreen(
                 }
 
                 SettingToggle(
-                    label = "Click al reiniciar",
+                    label = "Clic en reiniciar",
                     checked = settings.playTickOnReset,
                     onCheckedChange = { viewModel.updateBooleanSetting(
                         { it.playTickOnReset },
@@ -159,7 +159,7 @@ fun SettingsScreen(
                 )
 
                 SettingToggle(
-                    label = "Beeps de advertencia",
+                    label = "Pitets d'avís",
                     checked = settings.playWarningBeeps,
                     onCheckedChange = { viewModel.updateBooleanSetting(
                         { it.playWarningBeeps },
@@ -168,7 +168,7 @@ fun SettingsScreen(
                 )
 
                 SettingToggle(
-                    label = "Silbato final",
+                    label = "Xiulet final",
                     checked = settings.playFinalWhistle,
                     onCheckedChange = { viewModel.updateBooleanSetting(
                         { it.playFinalWhistle },
@@ -177,7 +177,7 @@ fun SettingsScreen(
                 )
 
                 SettingToggle(
-                    label = "Ignorar modo silencio",
+                    label = "Ignorar mode silenci",
                     checked = settings.overrideDoNotDisturb,
                     onCheckedChange = { viewModel.updateBooleanSetting(
                         { it.overrideDoNotDisturb },
@@ -187,9 +187,9 @@ fun SettingsScreen(
             }
 
             // ===== SECCIÓN: HÁPTICOS =====
-            SettingsSection(title = "📳 Hápticos") {
+            SettingsSection(title = "📳 Hàptics") {
                 SettingToggle(
-                    label = "Vibrar al reiniciar",
+                    label = "Vibrar en reiniciar",
                     checked = settings.vibrateOnReset,
                     onCheckedChange = { viewModel.updateBooleanSetting(
                         { it.vibrateOnReset },
@@ -198,7 +198,7 @@ fun SettingsScreen(
                 )
 
                 SettingToggle(
-                    label = "Vibrar en advertencia",
+                    label = "Vibrar en l'avís",
                     checked = settings.vibrateOnWarning,
                     onCheckedChange = { viewModel.updateBooleanSetting(
                         { it.vibrateOnWarning },
@@ -207,7 +207,7 @@ fun SettingsScreen(
                 )
 
                 SettingToggle(
-                    label = "Vibrar fuerte al expirar",
+                    label = "Vibrar fort en acabar",
                     checked = settings.vibrateOnExpire,
                     onCheckedChange = { viewModel.updateBooleanSetting(
                         { it.vibrateOnExpire },
@@ -219,40 +219,40 @@ fun SettingsScreen(
             // ===== SECCIÓN: VISUAL =====
             SettingsSection(title = "🎨 Visual") {
                 SettingColorPicker(
-                    label = "Color activo",
+                    label = "Color actiu",
                     color = settings.activeColor,
                     onColorChange = { viewModel.updateColor(SettingsViewModel.ColorType.ACTIVE, it) }
                 )
 
                 SettingColorPicker(
-                    label = "Color advertencia",
+                    label = "Color d'avís",
                     color = settings.warningColor,
                     onColorChange = { viewModel.updateColor(SettingsViewModel.ColorType.WARNING, it) }
                 )
 
                 SettingColorPicker(
-                    label = "Color expirado",
+                    label = "Color d'acabat",
                     color = settings.expiredColor,
                     onColorChange = { viewModel.updateColor(SettingsViewModel.ColorType.EXPIRED, it) }
                 )
 
                 SettingColorPicker(
-                    label = "Color fondo",
+                    label = "Color de fons",
                     color = settings.backgroundColor,
                     onColorChange = { viewModel.updateColor(SettingsViewModel.ColorType.BACKGROUND, it) }
                 )
 
                 SettingToggle(
-                    label = "Mantener pantalla encendida",
+                    label = "Mantenir la pantalla encesa",
                     checked = settings.keepScreenOn,
                     onCheckedChange = { viewModel.updateKeepScreenOn(it) }
                 )
             }
 
             // ===== SECCIÓN: COMPORTAMIENTO =====
-            SettingsSection(title = "⚙️ Comportamiento") {
+            SettingsSection(title = "⚙️ Comportament") {
                 SettingToggle(
-                    label = "Auto-iniciar al abrir",
+                    label = "Iniciar automàticament en obrir",
                     checked = settings.autoStart,
                     onCheckedChange = { viewModel.updateAutoStart(it) }
                 )
@@ -269,7 +269,7 @@ fun SettingsScreen(
                     contentColor = MaterialTheme.colorScheme.onErrorContainer
                 )
             ) {
-                Text("Restaurar valores por defecto", fontWeight = FontWeight.Medium)
+                Text("Restaurar valors per defecte", fontWeight = FontWeight.Medium)
             }
         }
     }

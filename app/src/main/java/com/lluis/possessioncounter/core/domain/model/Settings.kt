@@ -12,14 +12,14 @@ import kotlin.math.min
  */
 enum class SoundType(val resourceName: String, val displayName: String) {
     // Beeps de advertencia
-    BEEP_CLASSIC("beep_classic", "Clásico"),
-    BEEP_SOFT("beep_soft", "Suave"),
+    BEEP_CLASSIC("beep_classic", "Clàssic"),
+    BEEP_SOFT("beep_soft", "Suau"),
     BEEP_DIGITAL("beep_digital", "Digital"),
 
     // Silbatos finales
-    WHISTLE_CLASSIC("whistle_classic", "Clásico"),
-    WHISTLE_SHORT("whistle_short", "Corto"),
-    WHISTLE_LONG("whistle_long", "Largo"),
+    WHISTLE_CLASSIC("whistle_classic", "Clàssic"),
+    WHISTLE_SHORT("whistle_short", "Curt"),
+    WHISTLE_LONG("whistle_long", "Llarg"),
 
     // Sonido de reinicio (tick)
     TICK_RESET("tick_reset", "Click")
@@ -29,20 +29,20 @@ enum class SoundType(val resourceName: String, val displayName: String) {
  * Patrón de vibración predefinido
  */
 enum class VibrationPattern(val pattern: LongArray, val displayName: String) {
-    STANDARD(longArrayOf(0, 50), "Estándar"),
+    STANDARD(longArrayOf(0, 50), "Estàndard"),
     DOUBLE(longArrayOf(0, 50, 100, 50), "Doble"),
     TRIPLE(longArrayOf(0, 30, 60, 30, 90, 30), "Triple"),
-    LONG(longArrayOf(0, 200), "Largo"),
-    HEARTBEAT(longArrayOf(0, 100, 100, 100, 300), "Latido")
+    LONG(longArrayOf(0, 200), "Llarg"),
+    HEARTBEAT(longArrayOf(0, 100, 100, 100, 300), "Batec")
 }
 
 /**
  * Tamaño de dígitos del display
  */
 enum class DigitSize(val scale: Float, val displayName: String) {
-    SMALL(0.6f, "Pequeño"),
-    MEDIUM(0.8f, "Mediano"),
-    LARGE(1.0f, "Grande"),
+    SMALL(0.6f, "Petit"),
+    MEDIUM(0.8f, "Mitjà"),
+    LARGE(1.0f, "Gran"),
     FULL_SCREEN(1.2f, "Pantalla completa")
 }
 
@@ -50,20 +50,20 @@ enum class DigitSize(val scale: Float, val displayName: String) {
  * Gestos para reiniciar el contador
  */
 enum class ResetGesture(val displayName: String) {
-    SINGLE_TAP("Tap simple"),
-    DOUBLE_TAP("Doble tap"),
-    VOLUME_BUTTON("Botón volumen"),
-    POWER_BUTTON("Botón encendido")
+    SINGLE_TAP("Toc simple"),
+    DOUBLE_TAP("Doble toc"),
+    VOLUME_BUTTON("Botó de volum"),
+    POWER_BUTTON("Botó d'encesa")
 }
 
 /**
  * Gestos para pausar el contador
  */
 enum class PauseGesture(val displayName: String) {
-    DOUBLE_TAP("Doble tap"),
-    LONG_PRESS("Pulsación larga"),
-    THREE_TAP("Triple tap"),
-    VOLUME_DOWN("Volumen -")
+    DOUBLE_TAP("Doble toc"),
+    LONG_PRESS("Pulsació llarga"),
+    THREE_TAP("Triple toc"),
+    VOLUME_DOWN("Volum -")
 }
 
 /**
