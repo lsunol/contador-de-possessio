@@ -76,6 +76,16 @@ fun MainScreen(
 
     val context = LocalContext.current
 
+    // Pausar al salir de la pantalla (abrir ajustes) o de la app
+    val lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner, viewModel) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_PAUSE) viewModel.pauseIfRunning()
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
     // Observar settings para colores
     val settings by viewModel.settingsFlow.collectAsStateWithLifecycle(
         initialValue = com.lluis.possessioncounter.core.domain.model.Settings.DEFAULT

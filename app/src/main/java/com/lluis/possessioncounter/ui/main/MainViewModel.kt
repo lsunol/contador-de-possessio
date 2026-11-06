@@ -128,6 +128,11 @@ class MainViewModel(
         }
     }
 
+    /** Pausa solo si está corriendo (a diferencia de [pauseTimer], no reanuda). */
+    fun pauseIfRunning() {
+        if (uiState is TimerState.Running) pauseTimer()
+    }
+
     fun resetTimer() {
         cancelTimer()
         val settings = currentSettings
