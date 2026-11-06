@@ -1,5 +1,6 @@
 package com.lluis.possessioncounter.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.activity.ComponentActivity
@@ -10,6 +11,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,6 +33,7 @@ import com.lluis.possessioncounter.core.domain.model.TimerState
 import com.lluis.possessioncounter.core.domain.model.getRemainingSeconds
 import com.lluis.possessioncounter.ui.components.PauseOverlay
 import com.lluis.possessioncounter.ui.components.SevenSegmentDisplay
+import com.lluis.possessioncounter.ui.settings.SettingsActivity
 import com.lluis.possessioncounter.ui.theme.Theme
 
 private fun Int.toColor() = Color(this)
@@ -69,6 +73,8 @@ fun MainScreen(
 ) {
     // Observar estado del timer (respaldado por mutableStateOf en el ViewModel)
     val uiState = viewModel.uiState
+
+    val context = LocalContext.current
 
     // Observar settings para colores
     val settings by viewModel.settingsFlow.collectAsStateWithLifecycle(
@@ -112,11 +118,12 @@ fun MainScreen(
                 value = displayValue,
                 color = currentColor,
                 backgroundColor = settings.backgroundColor.toColor(),
-                segmentWidth = 12f * settings.digitSize.scale,
+                segmentWidth = 18f * settings.digitSize.scale,
                 segmentGap = 3f * settings.digitSize.scale,
                 digitSpacing = 16f * settings.digitSize.scale,
                 animate = true,
-                forceReverse = settings.forceReversePortrait
+                digitRotation = if (settings.forceReversePortrait) 180 else 0,
+                sizeFraction = 0.80f + 0.12f * (settings.digitSize.scale / 1.2f)
             )
 
             // Overlay de pausa
@@ -129,14 +136,15 @@ fun MainScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .statusBarsPadding()
                     .padding(16.dp),
                 contentAlignment = Alignment.TopEnd
             ) {
                 IconButton(
-                    onClick = { /* TODO: Navegar a Settings */ },
+                    onClick = { context.startActivity(Intent(context, SettingsActivity::class.java)) },
                     modifier = Modifier
                         .size(48.dp)
-                        .alpha(0.3f)
+                        .alpha(1.0f)
                 ) {
                     Icon(
                         imageVector = androidx.compose.material.icons.Icons.Default.Settings,

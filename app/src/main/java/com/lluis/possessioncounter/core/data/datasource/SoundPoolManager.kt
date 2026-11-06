@@ -2,94 +2,143 @@ package com.lluis.possessioncounter.core.data.datasource
 
 import android.content.Context
 import android.media.AudioAttributes
-import android.media.SoundPool
+import android.media.AudioFormat
+import android.media.AudioTrack
 import com.lluis.possessioncounter.core.domain.model.SoundType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.PI
+import kotlin.math.sin
 
 /**
- * Gestor de audio de baja latencia usando SoundPool.
- * Ideal para sonidos cortos que requieren reproducción inmediata (<20ms).
+ * Gestor de sonidos sintetizados (sin recursos raw).
+ * Genera PCM16 mono con ondas seno/cuadrada y lo reproduce con AudioTrack (MODE_STATIC).
+ * Mantiene el nombre/API pública original para no tocar a los llamadores.
  */
 @Singleton
 class SoundPoolManager @Inject constructor(
-    private val context: Context
+    @Suppress("UNUSED_PARAMETER") private val context: Context
 ) {
 
-    // Configuración de SoundPool
-    private val soundPool = SoundPool.Builder()
-        .setMaxStreams(4) // 3 beeps + 1 whistle simultáneos max
-        .setAudioAttributes(
-            AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_GAME)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED) // Respeta modo silencio salvo override
-                .build()
-        )
+    private val sampleRate = 44100
+
+    private val attributes = AudioAttributes.Builder()
+        .setUsage(AudioAttributes.USAGE_MEDIA)
+        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
         .build()
 
-    // Mapa de SoundType -> soundId cargado
-    private val soundIdMap = mutableMapOf<SoundType, Int>()
-    private val loadStatus = mutableMapOf<SoundType, Boolean>()
+    private val format = AudioFormat.Builder()
+        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+        .setSampleRate(sampleRate)
+        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
+        .build()
 
-    // Scope para cargas asíncronas
-    private val loadScope = CoroutineScope(Dispatchers.IO)
+    // PCM generado por tipo de sonido (cache)
+    private val pcmCache = ConcurrentHashMap<SoundType, ShortArray>()
+    private val activeTracks = ConcurrentHashMap.newKeySet<AudioTrack>()
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     init {
-        loadAllSounds()
+        // Pre-generar en background
+        scope.launch { SoundType.values().forEach { pcmFor(it) } }
     }
 
-    /**
-     * Carga todos los sonidos en background
-     */
-    private fun loadAllSounds() {
-        loadScope.launch {
-            SoundType.values().forEach { soundType ->
-                try {
-                    val soundId = soundPool.load(context, getResourceId(soundType), 1)
-                    soundIdMap[soundType] = soundId
-                    loadStatus[soundType] = true
-                } catch (e: Exception) {
-                    loadStatus[soundType] = false
-                }
+    private fun pcmFor(type: SoundType): ShortArray =
+        pcmCache.getOrPut(type) { synthesize(type) }
+
+    private fun synthesize(type: SoundType): ShortArray = when (type) {
+        SoundType.BEEP_CLASSIC -> tone(880.0, 150, square = false)
+        SoundType.BEEP_SOFT -> tone(660.0, 150, square = false, amp = 0.6)
+        SoundType.BEEP_DIGITAL -> tone(1000.0, 120, square = true, amp = 0.5)
+        SoundType.WHISTLE_CLASSIC -> whistle(2600.0, 2400.0, 700, vibratoHz = 30.0)
+        SoundType.WHISTLE_SHORT -> whistle(3000.0, 3000.0, 400, vibratoHz = 25.0)
+        SoundType.WHISTLE_LONG -> whistle(2800.0, 2200.0, 1200, vibratoHz = 35.0)
+        SoundType.TICK_RESET -> tone(1500.0, 40, square = false, amp = 0.7)
+    }
+
+    private fun tone(freq: Double, ms: Int, square: Boolean, amp: Double = 0.8): ShortArray {
+        val n = sampleRate * ms / 1000
+        val fade = (sampleRate * 0.008).toInt().coerceAtMost(n / 2)
+        return ShortArray(n) { i ->
+            val s = sin(2.0 * PI * freq * i / sampleRate)
+            var v = if (square) (if (s >= 0) 1.0 else -1.0) else s
+            val env = when {
+                i < fade -> i.toDouble() / fade
+                i > n - fade -> (n - i).toDouble() / fade
+                else -> 1.0
             }
+            v *= env * amp
+            (v * Short.MAX_VALUE).toInt().toShort()
+        }
+    }
+
+    /** Silbato: tono agudo con vibrato rápido (efecto "pea") y ligero glissando. */
+    private fun whistle(f0: Double, f1: Double, ms: Int, vibratoHz: Double): ShortArray {
+        val n = sampleRate * ms / 1000
+        val fade = (sampleRate * 0.015).toInt().coerceAtMost(n / 2)
+        var phase = 0.0
+        return ShortArray(n) { i ->
+            val t = i.toDouble() / sampleRate
+            val base = f0 + (f1 - f0) * i / n
+            val f = base + 120.0 * sin(2.0 * PI * vibratoHz * t)
+            phase += 2.0 * PI * f / sampleRate
+            val v = 0.7 * sin(phase) + 0.2 * sin(2.0 * phase)
+            val env = when {
+                i < fade -> i.toDouble() / fade
+                i > n - fade -> (n - i).toDouble() / fade
+                else -> 1.0
+            }
+            (v * env * 0.9 * Short.MAX_VALUE).toInt().toShort()
         }
     }
 
     /**
-     * Obtiene el resource ID (R.raw.xxx) para un SoundType
-     */
-    private fun getResourceId(soundType: SoundType): Int {
-        return context.resources.getIdentifier(
-            soundType.resourceName,
-            "raw",
-            context.packageName
-        )
-    }
-
-    /**
      * Reproduce un sonido con volumen específico
-     * @param soundType Tipo de sonido a reproducir
-     * @param volume Volumen 0.0 - 1.0 (se multiplica por masterVolume externamente)
-     * @return streamId si se reprodujo, -1 si error
+     * @param volume Volumen 0.0 - 1.0
+     * @return 0 si se lanzó la reproducción, -1 si error
      */
     fun play(soundType: SoundType, volume: Float = 1.0f): Int {
-        val soundId = soundIdMap[soundType]
-            ?: return -1 // No cargado aún
+        return try {
+            val pcm = pcmFor(soundType)
+            val bytes = pcm.size * 2
+            val track = AudioTrack(
+                attributes, format, bytes, AudioTrack.MODE_STATIC,
+                android.media.AudioManager.AUDIO_SESSION_ID_GENERATE
+            )
+            track.write(pcm, 0, pcm.size)
+            track.setVolume(volume.coerceIn(0.0f, 1.0f))
+            activeTracks.add(track)
+            track.setNotificationMarkerPosition(pcm.size)
+            track.setPlaybackPositionUpdateListener(object : AudioTrack.OnPlaybackPositionUpdateListener {
+                override fun onMarkerReached(t: AudioTrack) = dispose(t)
+                override fun onPeriodicNotification(t: AudioTrack) {}
+            })
+            track.play()
+            // Red de seguridad por si el marcador no se dispara
+            scope.launch {
+                delay(pcm.size * 1000L / sampleRate + 500)
+                dispose(track)
+            }
+            0
+        } catch (e: Exception) {
+            -1
+        }
+    }
 
-        val clampedVolume = volume.coerceIn(0.0f, 1.0f)
-        return soundPool.play(
-            soundId,
-            clampedVolume, // leftVolume
-            clampedVolume, // rightVolume
-            1,             // priority
-            0,             // loop (0 = no loop)
-            1.0f           // rate (1.0 = normal)
-        )
+    private fun dispose(track: AudioTrack) {
+        if (activeTracks.remove(track)) {
+            try {
+                track.stop()
+            } catch (_: Exception) {
+            }
+            track.release()
+        }
     }
 
     /**
@@ -97,55 +146,40 @@ class SoundPoolManager @Inject constructor(
      * @param sequence Lista de (SoundType, delayMs, volume)
      */
     fun playSequence(sequence: List<Triple<SoundType, Long, Float>>) {
-        loadScope.launch {
+        scope.launch {
             sequence.forEach { (soundType, delayMs, volume) ->
-                if (delayMs > 0) {
-                    kotlinx.coroutines.delay(delayMs)
-                }
+                if (delayMs > 0) delay(delayMs)
                 play(soundType, volume)
             }
         }
     }
 
     /**
-     * Reproduce la secuencia completa de expiración:
-     * 3 beeps de advertencia (1 por segundo) + 1 silbato final
+     * Secuencia completa de expiración: 3 beeps (1 por segundo) + silbato final
      */
     fun playExpirationSequence(
         warningSound: SoundType,
         whistleSound: SoundType,
         masterVolume: Float,
-        onWarningBeep: (Int) -> Unit = {}, // callback para vibrar en cada beep
-        onWhistle: () -> Unit = {}          // callback para vibrar fuerte al final
+        onWarningBeep: (Int) -> Unit = {},
+        onWhistle: () -> Unit = {}
     ) {
-        loadScope.launch {
-            // 3 beeps de advertencia: a los 0ms, 1000ms, 2000ms
+        scope.launch {
             repeat(3) { i ->
-                val delay = i * 1000L
-                if (delay > 0) kotlinx.coroutines.delay(delay)
-                val streamId = play(warningSound, masterVolume)
-                if (streamId != -1) onWarningBeep(i + 1)
+                if (i > 0) delay(1000L)
+                if (play(warningSound, masterVolume) != -1) onWarningBeep(i + 1)
             }
-
-            // Silbato final a los 3000ms
-            kotlinx.coroutines.delay(3000)
-            val streamId = play(whistleSound, masterVolume)
-            if (streamId != -1) onWhistle()
+            delay(1000L)
+            if (play(whistleSound, masterVolume) != -1) onWhistle()
         }
     }
 
-    /**
-     * Verifica si un sonido está cargado
-     */
-    fun isLoaded(soundType: SoundType): Boolean = loadStatus[soundType] == true
+    /** Siempre disponible: se sintetiza bajo demanda. */
+    fun isLoaded(soundType: SoundType): Boolean = true
 
-    /**
-     * Libera recursos (llamar en Application.onTerminate o similar)
-     */
     fun release() {
-        soundPool.release()
-        soundIdMap.clear()
-        loadStatus.clear()
-        loadScope.cancel()
+        activeTracks.toList().forEach { dispose(it) }
+        pcmCache.clear()
+        scope.cancel()
     }
 }

@@ -38,7 +38,10 @@ class CoroutineTimer @Inject constructor(
             val startTime = SystemClock.uptimeMillis()
             val endTime = startTime + durationMillis
             val warningTime = endTime - warningThresholdMillis
-            var warningTriggered = false
+            // Un aviso por segundo dentro de la ventana de advertencia (p.ej. 3 beeps en 3s)
+            val totalWarnings = if (warningThresholdMillis > 0) ((warningThresholdMillis + 999) / 1000).toInt() else 0
+            // Al reanudar dentro de la ventana, no repetir en ráfaga los avisos ya vencidos
+            var warningsFired = if (startTime > warningTime) ((startTime - warningTime + 999) / 1000).toInt().coerceAtMost(totalWarnings) else 0
 
             while (isActive) {
                 val now = SystemClock.uptimeMillis()
@@ -48,8 +51,10 @@ class CoroutineTimer @Inject constructor(
                 onTick(remaining)
 
                 // Detectar cruce de umbral de advertencia
-                if (!warningTriggered && now >= warningTime) {
-                    warningTriggered = true
+                if (remaining > 0 && warningsFired < totalWarnings &&
+                    now >= warningTime + warningsFired * 1000L
+                ) {
+                    warningsFired++
                     onWarning(remaining)
                 }
 

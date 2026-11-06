@@ -5,7 +5,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,171 +52,124 @@ fun SevenSegmentDisplay(
     value: Int,                    // Valor a mostrar (0-99)
     color: Color,                  // Color de segmentos encendidos
     backgroundColor: Color = Color.Transparent, // Color de segmentos apagados (opcional)
-    segmentWidth: Float = 8f,      // Grosor de segmentos en dp
-    segmentGap: Float = 2f,        // Espacio entre segmentos en dp
-    digitSpacing: Float = 12f,     // Espacio entre dígitos en dp
+    segmentWidth: Float = 8f,      // Se mantiene por compatibilidad (el grosor se deriva del alto)
+    segmentGap: Float = 2f,        // Se mantiene por compatibilidad
+    digitSpacing: Float = 12f,     // Se mantiene por compatibilidad
     animate: Boolean = true,       // Animar cambios de color
     modifier: Modifier = Modifier,
-    forceReverse: Boolean = false  // Rotar 180° para uso boca abajo
+    digitRotation: Int = 0,        // Rotación en grados del CONJUNTO de dígitos (180 = boca abajo)
+    sizeFraction: Float = 0.92f    // Fracción del espacio disponible que ocupa el número
 ) {
-    // Extraer dígitos (decenas y unidades)
     val tens = (value / 10) % 10
     val units = value % 10
+    val showTens = value >= 10 || tens > 0
 
-    // Color animado para transiciones suaves
-    val animatedColor by animateColorAsState(
-        targetValue = color,
-        animationSpec = tween(150)
-    )
-
-    // Color de fondo animado
+    val animatedColor by animateColorAsState(targetValue = color, animationSpec = tween(150))
     val animatedBgColor by animateColorAsState(
         targetValue = backgroundColor.copy(alpha = 0.15f),
         animationSpec = tween(150)
     )
 
-    Row(
+    BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .rotate(if (forceReverse) 180f else 0f),
-        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+            // Única rotación: se aplica una sola vez al conjunto (orden y glifos).
+            .rotate(digitRotation.toFloat()),
+        contentAlignment = Alignment.Center
     ) {
-        // Dígito de decenas (ocultar si 0 y valor < 10)
-        if (value >= 10 || tens > 0) {
-            DigitView(
-                digit = tens,
-                segmentColor = animatedColor,
-                backgroundColor = animatedBgColor,
-                segmentWidth = segmentWidth,
-                segmentGap = segmentGap,
-                animate = animate
-            )
-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.width(digitSpacing.dp))
-        }
+        val count = if (showTens) 2 else 1
+        val aspect = 0.58f          // ancho / alto de un dígito
+        val spacingRatio = 0.18f    // separación / ancho de dígito
+        val availW = maxWidth * sizeFraction
+        val availH = maxHeight * sizeFraction
+        val totalWidthPerHeight = count * aspect + (count - 1) * aspect * spacingRatio
+        val digitH = minOf(availH, availW / totalWidthPerHeight)
+        val digitW = digitH * aspect
 
-        // Dígito de unidades
-        DigitView(
-            digit = units,
-            segmentColor = animatedColor,
-            backgroundColor = animatedBgColor,
-            segmentWidth = segmentWidth,
-            segmentGap = segmentGap,
-            animate = animate
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(digitW * spacingRatio),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (showTens) {
+                DigitView(tens, animatedColor, animatedBgColor, Modifier.size(digitW, digitH))
+            }
+            DigitView(units, animatedColor, animatedBgColor, Modifier.size(digitW, digitH))
+        }
     }
 }
 
-/**
- * Vista de un solo dígito 7-segment
- */
+private val SEGMENT_MAP = mapOf(
+    0 to booleanArrayOf(true, true, true, true, true, true, false),
+    1 to booleanArrayOf(false, true, true, false, false, false, false),
+    2 to booleanArrayOf(true, true, false, true, true, false, true),
+    3 to booleanArrayOf(true, true, true, true, false, false, true),
+    4 to booleanArrayOf(false, true, true, false, false, true, true),
+    5 to booleanArrayOf(true, false, true, true, false, true, true),
+    6 to booleanArrayOf(true, false, true, true, true, true, true),
+    7 to booleanArrayOf(true, true, true, false, false, false, false),
+    8 to booleanArrayOf(true, true, true, true, true, true, true),
+    9 to booleanArrayOf(true, true, true, true, false, true, true)
+)
+
+/** Un dígito 7-segment con segmentos hexagonales de proporciones correctas. */
 @Composable
 private fun DigitView(
     digit: Int,
     segmentColor: Color,
     backgroundColor: Color,
-    segmentWidth: Float,
-    segmentGap: Float,
-    animate: Boolean
+    modifier: Modifier
 ) {
-    // Definición de qué segmentos están encendidos para cada dígito
-    // Segmentos: a=0, b=1, c=2, d=3, e=4, f=5, g=6
-    val segmentMap = remember {
-        mapOf(
-            0 to booleanArrayOf(true, true, true, true, true, true, false),  // 0: a,b,c,d,e,f
-            1 to booleanArrayOf(false, true, true, false, false, false, false), // 1: b,c
-            2 to booleanArrayOf(true, true, false, true, true, false, true),   // 2: a,b,g,e,d
-            3 to booleanArrayOf(true, true, true, true, false, false, true),   // 3: a,b,c,d,g
-            4 to booleanArrayOf(false, true, true, false, false, true, true),  // 4: f,g,b,c
-            5 to booleanArrayOf(true, false, true, true, false, true, true),   // 5: a,f,g,c,d
-            6 to booleanArrayOf(true, false, true, true, true, true, true),    // 6: a,f,g,e,c,d
-            7 to booleanArrayOf(true, true, true, false, false, false, false), // 7: a,b,c
-            8 to booleanArrayOf(true, true, true, true, true, true, true),     // 8: all
-            9 to booleanArrayOf(true, true, true, true, false, true, true)     // 9: a,b,c,d,f,g
-        )
-    }
+    val on = SEGMENT_MAP[digit] ?: BooleanArray(7)
 
-    val segmentsOn = segmentMap[digit] ?: booleanArrayOf(false, false, false, false, false, false, false)
+    Canvas(modifier = modifier) {
+        val w = size.width
+        val h = size.height
+        val t = h * 0.10f          // grosor
+        val gap = t * 0.12f        // hueco entre segmentos
+        val half = t / 2f
+        val left = half
+        val right = w - half
+        val top = half
+        val bottom = h - half
+        val midY = h / 2f
 
-    // Dimensiones del dígito (en dp, se convierten a px en Canvas)
-    val digitWidth = (segmentWidth * 2 + segmentGap * 2 + 40).dp  // Ancho aprox
-    val digitHeight = (segmentWidth * 2 + segmentGap * 2 + 70).dp // Alto aprox
-
-    Box(
-        modifier = Modifier
-            .size(digitWidth, digitHeight)
-            .padding(4.dp)
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val width = size.width
-            val height = size.height
-            val sw = segmentWidth.dp.toPx()
-            val gap = segmentGap.dp.toPx()
-
-            // Coordenadas clave para los segmentos
-            val left = gap
-            val right = width - gap
-            val top = gap
-            val bottom = height - gap
-            val midY = height / 2f
-            val midX = width / 2f
-
-            // Función para dibujar un segmento
-            fun drawSegment(pathBuilder: Path.() -> Unit, isOn: Boolean) {
-                drawPath(
-                    path = Path().apply(pathBuilder),
-                    color = if (isOn) segmentColor else backgroundColor,
-                    style = Stroke(width = sw, cap = StrokeCap.Round, join = StrokeJoin.Round)
-                )
+        fun horizontal(y: Float, lit: Boolean) {
+            val x0 = left + gap + half
+            val x1 = right - gap - half
+            val p = Path().apply {
+                moveTo(x0 - half, y)
+                lineTo(x0, y - half)
+                lineTo(x1, y - half)
+                lineTo(x1 + half, y)
+                lineTo(x1, y + half)
+                lineTo(x0, y + half)
+                close()
             }
-
-            // Segmento A (superior horizontal)
-            drawSegment({
-                moveTo(left + sw, top)
-                lineTo(right - sw, top)
-            }, segmentsOn[0])
-
-            // Segmento B (superior derecho vertical)
-            drawSegment({
-                moveTo(right, top + sw)
-                lineTo(right, midY - gap)
-            }, segmentsOn[1])
-
-            // Segmento C (inferior derecho vertical)
-            drawSegment({
-                moveTo(right, midY + gap)
-                lineTo(right, bottom - sw)
-            }, segmentsOn[2])
-
-            // Segmento D (inferior horizontal)
-            drawSegment({
-                moveTo(right - sw, bottom)
-                lineTo(left + sw, bottom)
-            }, segmentsOn[3])
-
-            // Segmento E (inferior izquierdo vertical)
-            drawSegment({
-                moveTo(left, midY + gap)
-                lineTo(left, bottom - sw)
-            }, segmentsOn[4])
-
-            // Segmento F (superior izquierdo vertical)
-            drawSegment({
-                moveTo(left, top + sw)
-                lineTo(left, midY - gap)
-            }, segmentsOn[5])
-
-            // Segmento G (central horizontal)
-            drawSegment({
-                moveTo(left + sw, midY)
-                lineTo(right - sw, midY)
-            }, segmentsOn[6])
-
-            // Punto decimal (opcional, no usado en contador)
-            // drawSegment({
-            //     addCircle(right + gap, bottom + gap, sw / 2f, Path.Direction.CW)
-            // }, false, android.graphics.Paint.Style.FILL)
+            drawPath(p, if (lit) segmentColor else backgroundColor)
         }
+
+        fun vertical(x: Float, yStart: Float, yEnd: Float, lit: Boolean) {
+            val y0 = yStart + gap + half
+            val y1 = yEnd - gap - half
+            val p = Path().apply {
+                moveTo(x, y0 - half)
+                lineTo(x + half, y0)
+                lineTo(x + half, y1)
+                lineTo(x, y1 + half)
+                lineTo(x - half, y1)
+                lineTo(x - half, y0)
+                close()
+            }
+            drawPath(p, if (lit) segmentColor else backgroundColor)
+        }
+
+        horizontal(top, on[0])                 // a
+        vertical(right, top, midY, on[1])      // b
+        vertical(right, midY, bottom, on[2])   // c
+        horizontal(bottom, on[3])              // d
+        vertical(left, midY, bottom, on[4])    // e
+        vertical(left, top, midY, on[5])       // f
+        horizontal(midY, on[6])                // g
     }
 }
 
