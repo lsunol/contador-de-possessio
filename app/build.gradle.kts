@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.lluis.possessioncounter"
+    namespace = "dev.lluissunol.vuitsegons"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.lluis.possessioncounter"
+        applicationId = "dev.lluissunol.vuitsegons"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

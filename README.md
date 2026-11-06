@@ -100,7 +100,7 @@ Accede desde el icono ⚙️ (esquina superior derecha) o pulsación larga 3s.
 
 ### Estructura del Proyecto
 ```
-app/src/main/java/com/lluis/possessioncounter/
+app/src/main/java/dev/lluissunol/vuitsegons/
 ├── core/
 │   ├── domain/           # Modelos, Repository interfaces, UseCases
 │   └── data/             # Implementaciones (DataStore, SoundPool, Timer)

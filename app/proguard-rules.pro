@@ -19,18 +19,18 @@
 -keep class android.media.SoundPool { *; }
 
 # Keep Settings model (Parcelable)
--keep class com.lluis.possessioncounter.core.domain.model.Settings { *; }
--keep class com.lluis.possessioncounter.core.domain.model.TimerState { *; }
--keep class com.lluis.possessioncounter.core.domain.model.SoundType { *; }
--keep class com.lluis.possessioncounter.core.domain.model.VibrationPattern { *; }
--keep class com.lluis.possessioncounter.core.domain.model.DigitSize { *; }
--keep class com.lluis.possessioncounter.core.domain.model.ResetGesture { *; }
--keep class com.lluis.possessioncounter.core.domain.model.PauseGesture { *; }
+-keep class dev.lluissunol.vuitsegons.core.domain.model.Settings { *; }
+-keep class dev.lluissunol.vuitsegons.core.domain.model.TimerState { *; }
+-keep class dev.lluissunol.vuitsegons.core.domain.model.SoundType { *; }
+-keep class dev.lluissunol.vuitsegons.core.domain.model.VibrationPattern { *; }
+-keep class dev.lluissunol.vuitsegons.core.domain.model.DigitSize { *; }
+-keep class dev.lluissunol.vuitsegons.core.domain.model.ResetGesture { *; }
+-keep class dev.lluissunol.vuitsegons.core.domain.model.PauseGesture { *; }
 
 # Keep Hilt Entry Points
--keep class com.lluis.possessioncounter.PossessionCounterApplication { *; }
--keep class com.lluis.possessioncounter.ui.main.MainActivity { *; }
--keep class com.lluis.possessioncounter.ui.settings.SettingsActivity { *; }
+-keep class dev.lluissunol.vuitsegons.PossessionCounterApplication { *; }
+-keep class dev.lluissunol.vuitsegons.ui.main.MainActivity { *; }
+-keep class dev.lluissunol.vuitsegons.ui.settings.SettingsActivity { *; }
 
 # Keep Kotlin serialization
 -keep class kotlinx.serialization.** { *; }

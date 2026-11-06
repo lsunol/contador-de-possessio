@@ -19,11 +19,11 @@ una app web ni un CLI. El flujo "run" genérico de browser/CLI no aplica.
 
 - SDK de Android: variable de entorno `ANDROID_HOME`
   (normalmente `C:\Users\<usuario>\AppData\Local\Android\Sdk`).
-- `applicationId`: `com.lluis.possessioncounter`
+- `applicationId`: `dev.lluissunol.vuitsegons`
   (ver `app/build.gradle.kts`).
 - El build **debug** añade el sufijo `.debug`, así que el paquete instalado
-  es `com.lluis.possessioncounter.debug`.
-- Actividad principal: `com.lluis.possessioncounter.ui.main.MainActivity`.
+  es `dev.lluissunol.vuitsegons.debug`.
+- Actividad principal: `dev.lluissunol.vuitsegons.ui.main.MainActivity`.
 - APK de debug generado en: `app/build/outputs/apk/debug/app-debug.apk`.
 - AVD disponible (comprobar con `emulator -list-avds`, puede cambiar):
   `opentv36` (API 36, `google_apis`, `x86_64`, skin de teléfono 1080x2400
@@ -89,7 +89,7 @@ todas las tareas — no hace falta `clean`.
 ### 5. Lanzar la app
 
 ```bash
-"$ANDROID_HOME/platform-tools/adb" shell monkey -p com.lluis.possessioncounter.debug -c android.intent.category.LAUNCHER 1
+"$ANDROID_HOME/platform-tools/adb" shell monkey -p dev.lluissunol.vuitsegons.debug -c android.intent.category.LAUNCHER 1
 ```
 
 ### 6. Verificar que está en primer plano y mirar la pantalla
@@ -101,7 +101,7 @@ cygpath -w /tmp/screenshot.png
 ```
 
 `mCurrentFocus` debe mostrar
-`com.lluis.possessioncounter.debug/com.lluis.possessioncounter.ui.main.MainActivity`.
+`dev.lluissunol.vuitsegons.debug/dev.lluissunol.vuitsegons.ui.main.MainActivity`.
 
 **Importante**: el Bash tool corre sobre MSYS, así que `/tmp` NO es
 `C:\Windows\Temp` ni `C:\Users\<usuario>\AppData\Local\Temp` — se resuelve
@@ -114,5 +114,5 @@ rutas de Windows) pueda abrir el PNG, convierte la ruta con
 Repetir solo los pasos 3-6 (el emulador ya está arrancado):
 `assembleDebug` → `adb install -r` → `monkey` → captura de verificación.
 `adb install -r` reinstala conservando datos de la app; usar
-`adb uninstall com.lluis.possessioncounter.debug` antes si se necesita una
+`adb uninstall dev.lluissunol.vuitsegons.debug` antes si se necesita una
 instalación limpia.

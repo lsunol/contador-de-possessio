@@ -23,7 +23,7 @@
 ## Estructura de Paquetes
 
 ```
-com.lluis.possessioncounter
+dev.lluissunol.vuitsegons
 ├── app/                          # Módulo principal
 │   ├── di/
 │   │   ├── AppModule.kt          # Hilt modules: SoundPool, DataStore, Timer
@@ -379,11 +379,11 @@ plugins {
 ```kotlin
 // app/build.gradle.kts
 android {
-    namespace = "com.lluis.possessioncounter"
+    namespace = "dev.lluissunol.vuitsegons"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.lluis.possessioncounter"
+        applicationId = "dev.lluissunol.vuitsegons"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -432,7 +432,7 @@ dependencies {
 
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lluis.possessioncounter">
+    package="dev.lluissunol.vuitsegons">
 
     <!-- WakeLock para mantener pantalla encendida -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
