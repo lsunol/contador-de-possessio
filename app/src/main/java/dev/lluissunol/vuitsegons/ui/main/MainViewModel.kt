@@ -30,7 +30,7 @@ class MainViewModel(
 ) : ViewModel() {
 
     private companion object {
-        const val DOUBLE_PRESS_MS = 300L
+        const val DOUBLE_PRESS_MS = 450L
     }
 
     // ===== STATE =====
