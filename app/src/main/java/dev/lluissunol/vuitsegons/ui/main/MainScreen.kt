@@ -202,7 +202,7 @@ fun MainScreen(
                 ) {
                     Icon(
                         imageVector = androidx.compose.material.icons.Icons.Default.Settings,
-                        contentDescription = "Ajustos",
+                        contentDescription = "Configuració",
                         tint = currentColor
                     )
                 }

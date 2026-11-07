@@ -9,7 +9,7 @@
     <string name="timer_initial">A punt</string>
 
     <!-- Settings -->
-    <string name="settings_title">Ajustos</string>
+    <string name="settings_title">Configuració</string>
     <string name="section_time">Temps</string>
     <string name="section_audio">Audio</string>
     <string name="section_haptics">Hàptics</string>
@@ -78,5 +78,5 @@
     <!-- Descripciones para accesibilidad -->
     <string name="desc_seven_segment">Pantalla de 7 segments mostrant %1$d segons</string>
     <string name="desc_pause_overlay">Comptador en pausa, toca per reprendre</string>
-    <string name="desc_settings_button">Obrir ajustos</string>
+    <string name="desc_settings_button">Obrir configuració</string>
 </resources>

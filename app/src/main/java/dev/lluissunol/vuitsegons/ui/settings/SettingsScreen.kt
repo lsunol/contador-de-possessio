@@ -89,7 +89,7 @@ fun SettingsScreen(
         containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
             TopAppBar(
-                title = { Text("Ajustos", fontWeight = FontWeight.Bold) },
+                title = { Text("Configuració", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { (context as ComponentActivity).onBackPressedDispatcher.onBackPressed() }) {
                         Icon(
