@@ -30,7 +30,7 @@ class MainViewModel(
 ) : ViewModel() {
 
     private companion object {
-        const val DOUBLE_PRESS_MS = 450L
+        const val DOUBLE_PRESS_MS = 500L
     }
 
     // ===== STATE =====
@@ -248,6 +248,11 @@ class MainViewModel(
 
         // ===== GESTURE HANDLING =====
     fun onSingleTap() {
+        // En pausa, un toque reanuda desde donde estaba (no reinicia)
+        if (uiState is TimerState.Paused) {
+            pauseTimer()
+            return
+        }
         when (currentSettings.resetGesture) {
             ResetGesture.SINGLE_TAP -> resetTimer()
             ResetGesture.DOUBLE_TAP -> {} // Se maneja en onDoubleTap
