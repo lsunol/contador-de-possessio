@@ -63,23 +63,6 @@ class SettingsActivity : ComponentActivity() {
         (application as PossessionCounterApplication).container.viewModelFactory
     }
 
-    private var capturedKeyCode: Int? = null
-
-    // En modo captura, la tecla del pulsador externo se asigna en lugar de llegar a la UI
-    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
-        when (event.action) {
-            android.view.KeyEvent.ACTION_DOWN -> if (event.repeatCount == 0 && viewModel.onKeyCaptured(event.keyCode)) {
-                capturedKeyCode = event.keyCode
-                return true
-            }
-            android.view.KeyEvent.ACTION_UP -> if (event.keyCode == capturedKeyCode) {
-                capturedKeyCode = null
-                return true
-            }
-        }
-        return super.dispatchKeyEvent(event)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -99,7 +82,6 @@ fun SettingsScreen(
     val settings: dev.lluissunol.vuitsegons.core.domain.model.Settings by viewModel.settings.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-    val capturing by viewModel.capturing.collectAsStateWithLifecycle()
 
     MaterialTheme(colorScheme = SettingsColorScheme) {
     Scaffold(
@@ -275,42 +257,6 @@ fun SettingsScreen(
                 )
             }
 
-            // ===== SECCIÓN: BOTÓN EXTERN =====
-            SettingsSection(title = "🎮 Botó extern") {
-                val keyName = if (settings.externalButtonKeyCode == 0) "Cap"
-                    else android.view.KeyEvent.keyCodeToString(settings.externalButtonKeyCode).removePrefix("KEYCODE_")
-                SettingChoice(label = "Botó assignat", value = keyName, onClick = null)
-                SettingChoice(
-                    label = "Acció",
-                    value = settings.externalButtonAction.displayName,
-                    onClick = { viewModel.toggleExternalButtonAction() }
-                )
-                if (capturing) {
-                    Text(
-                        text = "Prem ara el botó del teu pulsador…",
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
-                    androidx.compose.material3.OutlinedButton(
-                        onClick = { viewModel.cancelCapture() },
-                        modifier = Modifier.fillMaxWidth()
-                    ) { Text("Cancel·lar") }
-                } else {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(
-                            onClick = { viewModel.startCapture() },
-                            modifier = Modifier.weight(1f)
-                        ) { Text("Assignar botó") }
-                        if (settings.externalButtonKeyCode != 0) {
-                            androidx.compose.material3.OutlinedButton(
-                                onClick = { viewModel.clearExternalButton() }
-                            ) { Text("Esborrar") }
-                        }
-                    }
-                }
-            }
-
             // ===== SECCIÓN: COMPORTAMIENTO =====
             SettingsSection(title = "⚙️ Comportament") {
                 SettingToggle(
@@ -333,6 +279,11 @@ fun SettingsScreen(
             ) {
                 Text("Restaurar valors per defecte", fontWeight = FontWeight.Medium)
             }
+
+            // ===== ACERCA DE =====
+            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(24.dp))
+            AboutCard(modifier = Modifier.padding(horizontal = 16.dp))
+            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(32.dp))
         }
     }
     }
@@ -401,31 +352,6 @@ fun SettingRow(
             Text(text = value, fontSize = 16.sp, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium)
         }
         slider()
-    }
-}
-
-@Composable
-fun SettingChoice(
-    label: String,
-    value: String,
-    onClick: (() -> Unit)?
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh, RoundedCornerShape(12.dp))
-            .let { if (onClick != null) it.clickable { onClick() } else it },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(text = label, fontSize = 16.sp, modifier = Modifier.weight(1f).padding(16.dp))
-        Text(
-            text = value,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(end = 16.dp)
-        )
     }
 }
 

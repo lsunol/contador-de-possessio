@@ -29,6 +29,10 @@ class MainViewModel(
     private val vibrator: Vibrator
 ) : ViewModel() {
 
+    private companion object {
+        const val DOUBLE_PRESS_MS = 300L
+    }
+
     // ===== STATE =====
     private var _uiState = mutableStateOf<TimerState>(TimerState.Initial(Settings.DEFAULT.baseDurationMillis))
     val uiState: TimerState
@@ -221,28 +225,28 @@ class MainViewModel(
         }
     }
 
-    // ===== BOTÓN EXTERNO (pulsador Bluetooth/HID) =====
-    private var lastExternalPress = 0L
+    // ===== PULSADOR EXTERNO (Bluetooth/HID, p.ej. mando de palo selfie) =====
+    private var pendingSingleTap: kotlinx.coroutines.Job? = null
 
-    fun isExternalKey(keyCode: Int): Boolean =
-        currentSettings.externalButtonKeyCode != 0 && keyCode == currentSettings.externalButtonKeyCode
-
-    /** Ejecuta la acción asignada. Devuelve true si la tecla es la del botón externo (consumida). */
-    fun onExternalKey(keyCode: Int, repeatCount: Int): Boolean {
-        if (!isExternalKey(keyCode)) return false
-        val now = android.os.SystemClock.elapsedRealtime()
-        // Ignorar repeticiones y rebotes del pulsador
-        if (repeatCount == 0 && now - lastExternalPress >= 250) {
-            lastExternalPress = now
-            when (currentSettings.externalButtonAction) {
-                dev.lluissunol.vuitsegons.core.domain.model.ExternalButtonAction.RESET -> resetTimer()
-                dev.lluissunol.vuitsegons.core.domain.model.ExternalButtonAction.PAUSE -> pauseTimer()
-            }
+    /**
+     * Una pulsación se comporta como un toque en pantalla y dos seguidas
+     * (dentro de DOUBLE_PRESS_MS) como un doble toque, igual que los gestos táctiles.
+     */
+    fun onExternalButtonPress() {
+        val pending = pendingSingleTap
+        if (pending?.isActive == true) {
+            pending.cancel()
+            pendingSingleTap = null
+            onDoubleTap()
+            return
         }
-        return true
+        pendingSingleTap = viewModelScope.launch {
+            kotlinx.coroutines.delay(DOUBLE_PRESS_MS)
+            onSingleTap()
+        }
     }
 
-    // ===== GESTURE HANDLING =====
+        // ===== GESTURE HANDLING =====
     fun onSingleTap() {
         when (currentSettings.resetGesture) {
             ResetGesture.SINGLE_TAP -> resetTimer()

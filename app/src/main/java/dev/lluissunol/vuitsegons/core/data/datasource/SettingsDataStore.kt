@@ -51,9 +51,6 @@ private object SettingsKeys {
     val PAUSE_GESTURE = stringPreferencesKey("pause_gesture")
     val AUTO_START = stringPreferencesKey("auto_start")
 
-    // Botón externo
-    val EXTERNAL_KEY = stringPreferencesKey("external_button_key_code")
-    val EXTERNAL_ACTION = stringPreferencesKey("external_button_action")
 }
 
 /**
@@ -105,8 +102,6 @@ class SettingsDataStore @Inject constructor(
             prefs[SettingsKeys.RESET_GESTURE] = validated.resetGesture.name
             prefs[SettingsKeys.PAUSE_GESTURE] = validated.pauseGesture.name
             prefs[SettingsKeys.AUTO_START] = validated.autoStart.toString()
-            prefs[SettingsKeys.EXTERNAL_KEY] = validated.externalButtonKeyCode.toString()
-            prefs[SettingsKeys.EXTERNAL_ACTION] = validated.externalButtonAction.name
         }
     }
 
@@ -137,8 +132,6 @@ class SettingsDataStore @Inject constructor(
             prefs[SettingsKeys.RESET_GESTURE] = defaults.resetGesture.name
             prefs[SettingsKeys.PAUSE_GESTURE] = defaults.pauseGesture.name
             prefs[SettingsKeys.AUTO_START] = defaults.autoStart.toString()
-            prefs[SettingsKeys.EXTERNAL_KEY] = defaults.externalButtonKeyCode.toString()
-            prefs[SettingsKeys.EXTERNAL_ACTION] = defaults.externalButtonAction.name
         }
     }
 }
@@ -170,8 +163,6 @@ private fun Preferences.toSettings(): Settings {
         forceReversePortrait = this[SettingsKeys.FORCE_REVERSE]?.toBooleanStrictOrNull() ?: Settings.DEFAULT.forceReversePortrait,
         resetGesture = this[SettingsKeys.RESET_GESTURE]?.let { ResetGesture.valueOf(it) } ?: Settings.DEFAULT.resetGesture,
         pauseGesture = this[SettingsKeys.PAUSE_GESTURE]?.let { PauseGesture.valueOf(it) } ?: Settings.DEFAULT.pauseGesture,
-        autoStart = this[SettingsKeys.AUTO_START]?.toBooleanStrictOrNull() ?: Settings.DEFAULT.autoStart,
-        externalButtonKeyCode = this[SettingsKeys.EXTERNAL_KEY]?.toIntOrNull() ?: Settings.DEFAULT.externalButtonKeyCode,
-        externalButtonAction = this[SettingsKeys.EXTERNAL_ACTION]?.let { ExternalButtonAction.valueOf(it) } ?: Settings.DEFAULT.externalButtonAction
+        autoStart = this[SettingsKeys.AUTO_START]?.toBooleanStrictOrNull() ?: Settings.DEFAULT.autoStart
     ).validated()
 }

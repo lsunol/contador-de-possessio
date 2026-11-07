@@ -38,6 +38,14 @@ import dev.lluissunol.vuitsegons.ui.theme.Theme
 
 private fun Int.toColor() = Color(this)
 
+private val EXTERNAL_BUTTON_KEYS = setOf(
+    KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_VOLUME_DOWN,
+    KeyEvent.KEYCODE_CAMERA, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_NUMPAD_ENTER,
+    KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_HEADSETHOOK,
+    KeyEvent.KEYCODE_MEDIA_PLAY, KeyEvent.KEYCODE_MEDIA_PAUSE, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
+    KeyEvent.KEYCODE_MEDIA_NEXT, KeyEvent.KEYCODE_MEDIA_PREVIOUS
+)
+
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels {
@@ -74,13 +82,30 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (viewModel.onExternalKey(keyCode, event?.repeatCount ?: 0)) return true
+        if (event != null && isExternalButton(event)) {
+            // Ignorar repetición por mantener pulsado
+            if (event.repeatCount == 0) viewModel.onExternalButtonPress()
+            return true
+        }
         return super.onKeyDown(keyCode, event)
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        if (viewModel.isExternalKey(keyCode)) return true
+        if (event != null && isExternalButton(event)) return true
         return super.onKeyUp(keyCode, event)
+    }
+
+    /** Tecla de un pulsador externo (no los botones físicos del móvil) */
+    private fun isExternalButton(event: KeyEvent): Boolean {
+        if (event.keyCode !in EXTERNAL_BUTTON_KEYS) return false
+        val device = event.device ?: return false
+        return if (android.os.Build.VERSION.SDK_INT >= 34) {
+            device.isExternal
+        } else {
+            // Mejor esfuerzo antes de Android 14: descartar los botones integrados del teléfono
+            val n = device.name.lowercase()
+            !device.isVirtual && listOf("gpio", "pmic", "qpnp", "hall").none { n.contains(it) }
+        }
     }
 }
 

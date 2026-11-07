@@ -20,35 +20,8 @@ class SettingsViewModel(
     private val _settings = MutableStateFlow(Settings.DEFAULT)
     val settings = _settings.asStateFlow()
 
-    // Modo captura: la próxima tecla pulsada se asigna al botón externo
-    private val _capturing = MutableStateFlow(false)
-    val capturing = _capturing.asStateFlow()
-
     init {
         viewModelScope.launch { _settings.value = getSettings() }
-    }
-
-    fun startCapture() { _capturing.value = true }
-    fun cancelCapture() { _capturing.value = false }
-
-    /** Devuelve true si la tecla se ha consumido (modo captura activo). */
-    fun onKeyCaptured(keyCode: Int): Boolean {
-        if (!_capturing.value) return false
-        _capturing.value = false
-        // Atrás solo cancela la captura
-        if (keyCode != android.view.KeyEvent.KEYCODE_BACK) {
-            updateSettings(_settings.value.copy(externalButtonKeyCode = keyCode))
-        }
-        return true
-    }
-
-    fun clearExternalButton() {
-        updateSettings(_settings.value.copy(externalButtonKeyCode = 0))
-    }
-
-    fun toggleExternalButtonAction() {
-        val next = if (_settings.value.externalButtonAction == dev.lluissunol.vuitsegons.core.domain.model.ExternalButtonAction.RESET) dev.lluissunol.vuitsegons.core.domain.model.ExternalButtonAction.PAUSE else dev.lluissunol.vuitsegons.core.domain.model.ExternalButtonAction.RESET
-        updateSettings(_settings.value.copy(externalButtonAction = next))
     }
 
     // ===== ACTIONS =====
