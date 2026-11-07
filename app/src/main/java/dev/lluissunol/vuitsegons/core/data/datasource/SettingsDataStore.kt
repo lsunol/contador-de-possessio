@@ -50,6 +50,8 @@ private object SettingsKeys {
     val RESET_GESTURE = stringPreferencesKey("reset_gesture")
     val PAUSE_GESTURE = stringPreferencesKey("pause_gesture")
     val AUTO_START = stringPreferencesKey("auto_start")
+    val SWAP_TAP_GESTURES = stringPreferencesKey("swap_tap_gestures")
+    val RESET_ON_RESUME = stringPreferencesKey("reset_on_resume")
 
 }
 
@@ -102,6 +104,8 @@ class SettingsDataStore @Inject constructor(
             prefs[SettingsKeys.RESET_GESTURE] = validated.resetGesture.name
             prefs[SettingsKeys.PAUSE_GESTURE] = validated.pauseGesture.name
             prefs[SettingsKeys.AUTO_START] = validated.autoStart.toString()
+            prefs[SettingsKeys.SWAP_TAP_GESTURES] = validated.swapTapGestures.toString()
+            prefs[SettingsKeys.RESET_ON_RESUME] = validated.resetOnResume.toString()
         }
     }
 
@@ -132,6 +136,8 @@ class SettingsDataStore @Inject constructor(
             prefs[SettingsKeys.RESET_GESTURE] = defaults.resetGesture.name
             prefs[SettingsKeys.PAUSE_GESTURE] = defaults.pauseGesture.name
             prefs[SettingsKeys.AUTO_START] = defaults.autoStart.toString()
+            prefs[SettingsKeys.SWAP_TAP_GESTURES] = defaults.swapTapGestures.toString()
+            prefs[SettingsKeys.RESET_ON_RESUME] = defaults.resetOnResume.toString()
         }
     }
 }
@@ -163,6 +169,8 @@ private fun Preferences.toSettings(): Settings {
         forceReversePortrait = this[SettingsKeys.FORCE_REVERSE]?.toBooleanStrictOrNull() ?: Settings.DEFAULT.forceReversePortrait,
         resetGesture = this[SettingsKeys.RESET_GESTURE]?.let { ResetGesture.valueOf(it) } ?: Settings.DEFAULT.resetGesture,
         pauseGesture = this[SettingsKeys.PAUSE_GESTURE]?.let { PauseGesture.valueOf(it) } ?: Settings.DEFAULT.pauseGesture,
-        autoStart = this[SettingsKeys.AUTO_START]?.toBooleanStrictOrNull() ?: Settings.DEFAULT.autoStart
+        autoStart = this[SettingsKeys.AUTO_START]?.toBooleanStrictOrNull() ?: Settings.DEFAULT.autoStart,
+        swapTapGestures = this[SettingsKeys.SWAP_TAP_GESTURES]?.toBooleanStrictOrNull() ?: Settings.DEFAULT.swapTapGestures,
+        resetOnResume = this[SettingsKeys.RESET_ON_RESUME]?.toBooleanStrictOrNull() ?: Settings.DEFAULT.resetOnResume
     ).validated()
 }

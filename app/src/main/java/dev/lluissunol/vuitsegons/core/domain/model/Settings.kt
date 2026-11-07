@@ -125,7 +125,11 @@ data class Settings(
     /** Gesto para pausar */
     val pauseGesture: PauseGesture = PauseGesture.DOUBLE_TAP,
     /** Auto-iniciar al abrir app */
-    val autoStart: Boolean = true
+    val autoStart: Boolean = true,
+    /** Intercambiar gestos: un toque pausa/reanuda y doble toque reinicia */
+    val swapTapGestures: Boolean = false,
+    /** Al volver de la pausa, reiniciar el contador en lugar de continuar */
+    val resetOnResume: Boolean = true
 ) : Parcelable {
 
     /** Duración base en milisegundos */

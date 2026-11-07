@@ -264,6 +264,18 @@ fun SettingsScreen(
                     checked = settings.autoStart,
                     onCheckedChange = { viewModel.updateAutoStart(it) }
                 )
+
+                SettingToggle(
+                    label = "Intercanviar toc i doble toc (toc = pausa, doble toc = reinici)",
+                    checked = settings.swapTapGestures,
+                    onCheckedChange = { viewModel.updateSwapTapGestures(it) }
+                )
+
+                SettingToggle(
+                    label = "Reiniciar el comptador en sortir de la pausa",
+                    checked = settings.resetOnResume,
+                    onCheckedChange = { viewModel.updateResetOnResume(it) }
+                )
             }
 
             // ===== ACCIONES =====

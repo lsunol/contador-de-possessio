@@ -127,8 +127,14 @@ class MainViewModel(
                 totalMillis = current.totalMillis
             )
         } else if (current is TimerState.Paused) {
-            // Reanudar desde donde paró
-            resumeTimer(current.remainingMillis)
+            if (currentSettings.resetOnResume) {
+                // Reiniciar el contador al salir de la pausa
+                resetTimer()
+                if (uiState !is TimerState.Running) startTimer()
+            } else {
+                // Reanudar desde donde paró
+                resumeTimer(current.remainingMillis)
+            }
         }
     }
 
@@ -248,6 +254,11 @@ class MainViewModel(
 
         // ===== GESTURE HANDLING =====
     fun onSingleTap() {
+        // Gestos intercambiados: un toque pausa/reanuda
+        if (currentSettings.swapTapGestures) {
+            pauseTimer()
+            return
+        }
         // En pausa, un toque reanuda desde donde estaba (no reinicia)
         if (uiState is TimerState.Paused) {
             pauseTimer()
@@ -262,6 +273,11 @@ class MainViewModel(
     }
 
     fun onDoubleTap() {
+        // Gestos intercambiados: doble toque reinicia
+        if (currentSettings.swapTapGestures) {
+            resetTimer()
+            return
+        }
         when (currentSettings.pauseGesture) {
             PauseGesture.DOUBLE_TAP -> pauseTimer()
             PauseGesture.LONG_PRESS -> {} // Se maneja en onLongPress

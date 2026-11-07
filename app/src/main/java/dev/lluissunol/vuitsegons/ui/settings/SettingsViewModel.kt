@@ -105,6 +105,14 @@ class SettingsViewModel(
         updateSettings(_settings.value.copy(autoStart = enabled))
     }
 
+    fun updateSwapTapGestures(enabled: Boolean) {
+        updateSettings(_settings.value.copy(swapTapGestures = enabled))
+    }
+
+    fun updateResetOnResume(enabled: Boolean) {
+        updateSettings(_settings.value.copy(resetOnResume = enabled))
+    }
+
     fun resetToDefaults() {
         _settings.value = Settings.DEFAULT
         viewModelScope.launch { resetSettings() }
