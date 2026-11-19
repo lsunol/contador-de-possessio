@@ -254,6 +254,13 @@ class MainViewModel(
 
         // ===== GESTURE HANDLING =====
     fun onSingleTap() {
+        // Tiempo agotado (silbato ya sonado): un solo toque reinicia y arranca
+        // la cuenta atrás, sea cual sea la configuración de gestos.
+        if (uiState is TimerState.Expired) {
+            resetTimer()
+            if (uiState !is TimerState.Running) startTimer()
+            return
+        }
         // Gestos intercambiados: un toque pausa/reanuda
         if (currentSettings.swapTapGestures) {
             pauseTimer()
